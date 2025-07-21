@@ -1,0 +1,1665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RealWorldCircle - Find Your Toronto Tribe</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Take a 2-minute AI-powered quiz to find your perfect circle of friends in Toronto. Join 2,000+ locals making real connections offline.">
+    <meta name="keywords" content="Toronto friends, make friends Toronto, Toronto community, local meetups">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="RealWorldCircle - Find Your Toronto Tribe">
+    <meta property="og:description" content="AI-powered quiz matches you with local friendship circles">
+    <meta property="og:image" content="https://www.realworldcircle.com/preview.png">
+    <meta property="og:url" content="https://www.realworldcircle.com">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==">
+    
+    <style>
+        /* Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --trust-blue: #2E5BFF;
+            --connection-orange: #FF6B35;
+            --lake-blue: #4A90E2;
+            --community-green: #2ECC71;
+            --light-gray: #F8F9FA;
+            --medium-gray: #6C757D;
+            --dark-gray: #212529;
+            --white: #FFFFFF;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: var(--dark-gray);
+            overflow-x: hidden;
+            background: var(--light-gray);
+        }
+
+        /* Loading Screen */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--trust-blue) 0%, var(--lake-blue) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+
+        .loading-content {
+            text-align: center;
+            color: white;
+        }
+
+        .loading-logo {
+            font-size: 48px;
+            font-weight: 800;
+            margin-bottom: 20px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.8; }
+        }
+
+        .loading-dots {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            background: white;
+            border-radius: 50%;
+            animation: bounce 1.4s infinite ease-in-out both;
+        }
+
+        .dot:nth-child(1) { animation-delay: -0.32s; }
+        .dot:nth-child(2) { animation-delay: -0.16s; }
+
+        @keyframes bounce {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--trust-blue) 0%, var(--lake-blue) 100%);
+            color: white;
+            padding: 100px 20px 80px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before,
+        .hero::after {
+            content: '';
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.1;
+        }
+
+        .hero::before {
+            width: 400px;
+            height: 400px;
+            background: white;
+            top: -200px;
+            right: -200px;
+            animation: float 20s infinite linear;
+        }
+
+        .hero::after {
+            width: 300px;
+            height: 300px;
+            background: white;
+            bottom: -150px;
+            left: -150px;
+            animation: float 25s infinite linear reverse;
+        }
+
+        @keyframes float {
+            0% { transform: rotate(0deg) translateX(30px) rotate(0deg); }
+            100% { transform: rotate(360deg) translateX(30px) rotate(-360deg); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 56px;
+            font-weight: 800;
+            margin-bottom: 20px;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .hero-subtitle {
+            font-size: 24px;
+            margin-bottom: 40px;
+            opacity: 0.95;
+            animation: fadeInUp 0.8s ease-out 0.2s backwards;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: var(--connection-orange);
+            color: white;
+            padding: 18px 40px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-size: 20px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            animation: fadeInUp 0.8s ease-out 0.4s backwards;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 10px 30px rgba(255,107,53,0.3);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(255,107,53,0.4);
+        }
+
+        .trust-badges {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 60px;
+            flex-wrap: wrap;
+            animation: fadeInUp 0.8s ease-out 0.6s backwards;
+        }
+
+        .badge {
+            background: rgba(255,255,255,0.2);
+            padding: 15px 30px;
+            border-radius: 50px;
+            backdrop-filter: blur(10px);
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        /* Quiz Container */
+        .quiz-section {
+            padding: 80px 20px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .quiz-container {
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            max-width: 700px;
+            width: 100%;
+            overflow: hidden;
+            animation: slideIn 0.6s ease-out;
+            display: none;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .quiz-header {
+            background: linear-gradient(135deg, var(--connection-orange) 0%, #FF8E53 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .quiz-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: white;
+            width: 0%;
+            transition: width 0.5s ease;
+            border-radius: 10px;
+        }
+
+        .quiz-content {
+            padding: 40px;
+        }
+
+        .question {
+            display: none;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .question.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .question-number {
+            color: var(--connection-orange);
+            font-weight: 600;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+        }
+
+        .question-text {
+            font-size: 28px;
+            font-weight: 700;
+            line-height: 1.3;
+            margin-bottom: 30px;
+            color: var(--dark-gray);
+        }
+
+        .ai-hint {
+            background: var(--light-gray);
+            padding: 15px 20px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            font-size: 14px;
+            color: var(--medium-gray);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: slideIn 0.5s ease-out 0.3s backwards;
+        }
+
+        .ai-hint-icon {
+            font-size: 20px;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 18px 24px;
+            font-size: 18px;
+            border: 2px solid #E0E0E0;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: var(--trust-blue);
+            box-shadow: 0 0 0 4px rgba(46,91,255,0.1);
+        }
+
+        .options-grid {
+            display: grid;
+            gap: 12px;
+        }
+
+        .option {
+            background: white;
+            border: 2px solid #E0E0E0;
+            padding: 20px 24px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .option:hover {
+            border-color: var(--trust-blue);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .option.selected {
+            background: var(--trust-blue);
+            color: white;
+            border-color: var(--trust-blue);
+        }
+
+        .option-emoji {
+            font-size: 24px;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 40px;
+            justify-content: space-between;
+        }
+
+        .nav-btn {
+            padding: 14px 32px;
+            border: none;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn {
+            background: var(--light-gray);
+            color: var(--dark-gray);
+        }
+
+        .back-btn:hover {
+            background: #E0E0E0;
+        }
+
+        .next-btn {
+            background: var(--connection-orange);
+            color: white;
+            flex: 1;
+        }
+
+        .next-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(255,107,53,0.3);
+        }
+
+        .next-btn:disabled {
+            background: #CCCCCC;
+            cursor: not-allowed;
+        }
+
+        /* AI Chat Assistant */
+        .ai-assistant {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
+        }
+
+        .ai-bubble {
+            width: 60px;
+            height: 60px;
+            background: var(--community-green);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            animation: bounceIn 0.5s ease-out;
+        }
+
+        @keyframes bounceIn {
+            0% { transform: scale(0); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        .ai-bubble:hover {
+            transform: scale(1.1);
+        }
+
+        .ai-icon {
+            font-size: 30px;
+        }
+
+        .ai-chat {
+            position: absolute;
+            bottom: 80px;
+            right: 0;
+            width: 350px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            display: none;
+            overflow: hidden;
+            animation: slideUp 0.3s ease-out;
+        }
+
+        .ai-chat.active {
+            display: block;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .ai-chat-header {
+            background: var(--community-green);
+            color: white;
+            padding: 15px 20px;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .ai-chat-close {
+            cursor: pointer;
+            font-size: 20px;
+        }
+
+        .ai-chat-body {
+            padding: 20px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .ai-message {
+            background: var(--light-gray);
+            padding: 12px 16px;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            font-size: 14px;
+            line-height: 1.5;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .ai-message.user {
+            background: var(--trust-blue);
+            color: white;
+            margin-left: 20%;
+        }
+
+        /* Results Screen */
+        .results {
+            text-align: center;
+            padding: 60px 40px;
+            display: none;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .results.active {
+            display: block;
+        }
+
+        .personality-icon {
+            font-size: 100px;
+            margin-bottom: 20px;
+            animation: tada 1s ease-out;
+        }
+
+        @keyframes tada {
+            0% { transform: scale(1); }
+            10%, 20% { transform: scale(0.9) rotate(-3deg); }
+            30%, 50%, 70%, 90% { transform: scale(1.1) rotate(3deg); }
+            40%, 60%, 80% { transform: scale(1.1) rotate(-3deg); }
+            100% { transform: scale(1); }
+        }
+
+        .personality-type {
+            font-size: 36px;
+            font-weight: 800;
+            color: var(--trust-blue);
+            margin-bottom: 20px;
+        }
+
+        .personality-description {
+            font-size: 18px;
+            color: var(--medium-gray);
+            line-height: 1.6;
+            margin-bottom: 40px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .matches-preview {
+            background: var(--light-gray);
+            padding: 30px;
+            border-radius: 16px;
+            margin: 30px 0;
+        }
+
+        .match-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            text-align: left;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .match-name {
+            font-weight: 700;
+            color: var(--trust-blue);
+            margin-bottom: 5px;
+        }
+
+        .match-details {
+            font-size: 14px;
+            color: var(--medium-gray);
+        }
+
+        /* Social Proof */
+        .social-proof {
+            background: white;
+            padding: 80px 20px;
+        }
+
+        .section-title {
+            font-size: 36px;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 50px;
+            color: var(--dark-gray);
+        }
+
+        .testimonials {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .testimonial {
+            background: var(--light-gray);
+            padding: 30px;
+            border-radius: 16px;
+            position: relative;
+        }
+
+        .testimonial-quote {
+            font-size: 60px;
+            color: var(--trust-blue);
+            opacity: 0.2;
+            position: absolute;
+            top: 10px;
+            left: 20px;
+        }
+
+        .testimonial-text {
+            position: relative;
+            z-index: 1;
+            font-style: italic;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .testimonial-author {
+            font-weight: 700;
+            color: var(--trust-blue);
+        }
+
+        /* Live Activity Ticker */
+        .activity-ticker {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 50px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: slideInLeft 0.5s ease-out;
+            z-index: 100;
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-100%);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .activity-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--community-green);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--dark-gray);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        footer a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            opacity: 0.8;
+            transition: opacity 0.3s;
+        }
+
+        footer a:hover {
+            opacity: 1;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 36px;
+            }
+            
+            .hero-subtitle {
+                font-size: 18px;
+            }
+            
+            .trust-badges {
+                gap: 15px;
+            }
+            
+            .badge {
+                font-size: 14px;
+                padding: 10px 20px;
+            }
+            
+            .quiz-content {
+                padding: 25px;
+            }
+            
+            .question-text {
+                font-size: 22px;
+            }
+            
+            .ai-assistant {
+                bottom: 20px;
+                right: 20px;
+            }
+            
+            .ai-chat {
+                width: calc(100vw - 40px);
+                right: -20px;
+            }
+            
+            .activity-ticker {
+                display: none;
+            }
+        }
+
+        /* Utility Classes */
+        .hidden {
+            display: none !important;
+        }
+
+        .animate-shake {
+            animation: shake 0.5s ease-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-content">
+            <div class="loading-logo">RealWorldCircle</div>
+            <div class="loading-dots">
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero" id="heroSection">
+        <div class="hero-content">
+            <h1>RealWorldCircle</h1>
+            <p class="hero-subtitle">Find Your Toronto Tribe in 2 Minutes</p>
+            <button class="cta-button" onclick="startQuiz()">Take the AI-Powered Quiz</button>
+            <div class="trust-badges">
+                <div class="badge">🔥 2,147 Members</div>
+                <div class="badge">📍 All Toronto Hoods</div>
+                <div class="badge">🤖 AI-Powered Matching</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quiz Section -->
+    <section class="quiz-section">
+        <div class="quiz-container" id="quizContainer">
+            <div class="quiz-header">
+                <div class="quiz-title">Let's Find Your Perfect Circle! 🎯</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressBar"></div>
+                </div>
+            </div>
+            
+            <div class="quiz-content">
+                <!-- Questions will be dynamically inserted here -->
+                <div id="questionsContainer"></div>
+                
+                <!-- Results -->
+                <div class="results" id="results">
+                    <div class="personality-icon" id="personalityIcon">🎉</div>
+                    <h2 class="personality-type">You're a <span id="personalityType"></span>!</h2>
+                    <p class="personality-description" id="personalityDescription"></p>
+                    
+                    <div class="matches-preview">
+                        <h3 style="margin-bottom: 20px;">Your Top 3 Matches:</h3>
+                        <div id="matchesContainer"></div>
+                    </div>
+                    
+                    <button class="cta-button" onclick="viewFullMatches()">See All Your Matches</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Social Proof -->
+    <section class="social-proof" id="socialProof">
+        <h2 class="section-title">Real Torontonians, Real Friendships</h2>
+        <div class="testimonials">
+            <div class="testimonial">
+                <span class="testimonial-quote">"</span>
+                <p class="testimonial-text">The AI questions were spot on! Found my Sunday brunch crew in Leslieville. We've been meeting for 3 months now!</p>
+                <div class="testimonial-author">- Emma, 28</div>
+            </div>
+            <div class="testimonial">
+                <span class="testimonial-quote">"</span>
+                <p class="testimonial-text">As an introvert, I loved how the quiz understood my vibe. Matched me with a small book club that's perfect.</p>
+                <div class="testimonial-author">- David, 34</div>
+            </div>
+            <div class="testimonial">
+                <span class="testimonial-quote">"</span>
+                <p class="testimonial-text">New to Toronto from Vancouver. This quiz literally saved my social life. Board game nights every Thursday!</p>
+                <div class="testimonial-author">- Priya, 31</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 RealWorldCircle | Toronto, ON</p>
+        <div style="margin-top: 20px;">
+            <a href="#" onclick="showPrivacy()">Privacy Policy</a>
+            <a href="#" onclick="showTerms()">Terms of Service</a>
+            <a href="mailto:hello@realworldcircle.com">Contact</a>
+        </div>
+    </footer>
+
+    <!-- AI Assistant -->
+    <div class="ai-assistant">
+        <div class="ai-bubble" onclick="toggleAI()">
+            <span class="ai-icon">🤖</span>
+        </div>
+        <div class="ai-chat" id="aiChat">
+            <div class="ai-chat-header">
+                <span>AI Quiz Helper</span>
+                <span class="ai-chat-close" onclick="toggleAI()">×</span>
+            </div>
+            <div class="ai-chat-body" id="aiChatBody">
+                <div class="ai-message">
+                    👋 Hi! I'm here to help you find your perfect Toronto community. Ask me anything!
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Activity Ticker -->
+    <div class="activity-ticker" id="activityTicker" style="display: none;">
+        <div class="activity-dot"></div>
+        <span id="activityText">Sarah from Queen West just joined!</span>
+    </div>
+
+    <!-- Main JavaScript -->
+    <script>
+        // Quiz Configuration
+        const quizConfig = {
+            // AI API Settings (Optional - works without these)
+            openAI: {
+                enabled: false, // Set to true if you have API key
+                apiKey: '', // Add your OpenAI API key here
+                model: 'gpt-3.5-turbo'
+            },
+            
+            // Google Forms Integration
+            googleForm: {
+                url: 'https://docs.google.com/forms/d/e/YOUR_FORM_ID/formResponse',
+                entries: {
+                    name: 'entry.XXXXXX',
+                    email: 'entry.YYYYYY',
+                    neighborhood: 'entry.ZZZZZZ',
+                    // Add all your entry IDs here
+                }
+            },
+            
+            // Analytics
+            analytics: {
+                googleAnalyticsId: 'G-XXXXXXXXXX', // Add your GA ID
+                trackEvents: true
+            }
+        };
+
+        // Quiz Questions with Dynamic Variations
+        const quizQuestions = [
+            {
+                id: 1,
+                type: 'text',
+                baseQuestion: "First things first - what should we call you?",
+                variations: [
+                    "Hey there! What's your name?",
+                    "Welcome! Mind sharing your first name?",
+                    "Let's start with the basics - what's your name?",
+                    "Quick intro - what do friends call you?"
+                ],
+                placeholder: "Enter your first name",
+                validation: 'name',
+                aiHints: [
+                    "Just your first name is perfect! We'll use this to personalize your matches.",
+                    "Fun fact: People with your name initial tend to be great connectors!",
+                    "Love that name! Let's find your Toronto tribe."
+                ]
+            },
+            {
+                id: 2,
+                type: 'text',
+                baseQuestion: "What's the best email to reach you at?",
+                variations: [
+                    "Where should we send your matches?",
+                    "Drop your email for your personalized results!",
+                    "What's your email? (We promise no spam!)"
+                ],
+                placeholder: "your@email.com",
+                validation: 'email',
+                aiHints: [
+                    "We'll only use this to send your matched circles. No spam, promise!",
+                    "Pro tip: Use an email you check regularly so you don't miss meetup invites!",
+                    "Your matches will be sent here within 2 minutes!"
+                ]
+            },
+            {
+                id: 3,
+                type: 'options',
+                baseQuestion: "Which Toronto neighborhood do you call home?",
+                variations: {
+                    morning: "Where do you wake up in Toronto?",
+                    afternoon: "What Toronto hood are you repping?",
+                    evening: "Where in the 6ix are you heading home tonight?"
+                },
+                options: [
+                    { value: 'downtown', label: 'Downtown Core', emoji: '🏙️' },
+                    { value: 'west', label: 'West End (Parkdale, Junction)', emoji: '🌅' },
+                    { value: 'east', label: 'East End (Beaches, Leslieville)', emoji: '🌊' },
+                    { value: 'north', label: 'North York', emoji: '🌲' },
+                    { value: 'midtown', label: 'Midtown (Yonge & Eg)', emoji: '🏘️' },
+                    { value: 'etobicoke', label: 'Etobicoke', emoji: '🌳' },
+                    { value: 'scarborough', label: 'Scarborough', emoji: '🏖️' }
+                ],
+                aiHints: [
+                    "We match people by neighborhood so meetups are convenient!",
+                    "Pick where you spend most of your time - work or home.",
+                    "Each neighborhood has its own unique circle vibes!"
+                ]
+            },
+            {
+                id: 4,
+                type: 'options',
+                baseQuestion: "What's your ideal way to spend a Saturday?",
+                variations: {
+                    energetic: "Ready for adventure! Pick your perfect Saturday:",
+                    relaxed: "Time to unwind! Your ideal Saturday looks like:"
+                },
+                options: [
+                    { value: 'active', label: 'Something active outdoors', emoji: '🏃' },
+                    { value: 'coffee', label: 'Coffee and good conversation', emoji: '☕' },
+                    { value: 'culture', label: 'Museums, galleries, or shows', emoji: '🎨' },
+                    { value: 'food', label: 'Trying new restaurants', emoji: '🍜' },
+                    { value: 'games', label: 'Board games or trivia', emoji: '🎲' },
+                    { value: 'nature', label: 'Parks and nature walks', emoji: '🌿' }
+                ]
+            },
+            {
+                id: 5,
+                type: 'options',
+                baseQuestion: "When are you usually free to hang out?",
+                options: [
+                    { value: 'weekday_evening', label: 'Weekday evenings', emoji: '🌙' },
+                    { value: 'weekend_morning', label: 'Weekend mornings', emoji: '🌅' },
+                    { value: 'weekend_afternoon', label: 'Weekend afternoons', emoji: '☀️' },
+                    { value: 'weekend_evening', label: 'Weekend evenings', emoji: '🌃' },
+                    { value: 'flexible', label: 'Pretty flexible!', emoji: '🔄' }
+                ]
+            },
+            {
+                id: 6,
+                type: 'options',
+                baseQuestion: "What size group feels most comfortable?",
+                options: [
+                    { value: 'small', label: 'Small & intimate (3-5 people)', emoji: '👥' },
+                    { value: 'medium', label: 'Medium (6-10 people)', emoji: '👫' },
+                    { value: 'large', label: 'Large & lively (10+ people)', emoji: '🎉' },
+                    { value: 'any', label: "I'm flexible!", emoji: '🤷' }
+                ]
+            },
+            {
+                id: 7,
+                type: 'options',
+                baseQuestion: "What's your conversation style?",
+                options: [
+                    { value: 'deep', label: 'Deep talks about life', emoji: '🧠' },
+                    { value: 'funny', label: 'Jokes and laughs', emoji: '😂' },
+                    { value: 'practical', label: 'Sharing tips and advice', emoji: '💡' },
+                    { value: 'stories', label: 'Swapping stories', emoji: '📖' },
+                    { value: 'mixed', label: 'A bit of everything', emoji: '🎭' }
+                ]
+            },
+            {
+                id: 8,
+                type: 'options',
+                baseQuestion: "How do you feel about trying new things?",
+                options: [
+                    { value: 'adventurous', label: "Love it! Always down", emoji: '🚀' },
+                    { value: 'open', label: 'Open to it with friends', emoji: '👍' },
+                    { value: 'comfortable', label: 'Prefer familiar activities', emoji: '🛋️' },
+                    { value: 'depends', label: 'Depends on my mood', emoji: '🌈' }
+                ]
+            },
+            {
+                id: 9,
+                type: 'options',
+                baseQuestion: "What brought you to RealWorldCircle?",
+                options: [
+                    { value: 'new_city', label: 'New to Toronto', emoji: '📦' },
+                    { value: 'more_friends', label: 'Want more local friends', emoji: '➕' },
+                    { value: 'different_friends', label: 'Looking for different connections', emoji: '🔄' },
+                    { value: 'curious', label: 'Just curious!', emoji: '🤔' },
+                    { value: 'lonely', label: 'Feeling a bit isolated', emoji: '💙' }
+                ]
+            },
+            {
+                id: 10,
+                type: 'options',
+                baseQuestion: "One last thing - what's your friendship superpower?",
+                options: [
+                    { value: 'organizer', label: 'I plan great hangouts', emoji: '📅' },
+                    { value: 'connector', label: 'I bring people together', emoji: '🤝' },
+                    { value: 'listener', label: "I'm a great listener", emoji: '👂' },
+                    { value: 'energizer', label: 'I bring the energy', emoji: '⚡' },
+                    { value: 'helper', label: 'I love helping others', emoji: '🤲' }
+                ]
+            }
+        ];
+
+        // Personality Types
+        const personalityTypes = {
+            'adventure_catalyst': {
+                type: 'Adventure Catalyst',
+                icon: '🏔️',
+                description: "You're the friend who always has exciting plans! Your energy is contagious and you love bringing people together for new experiences. Toronto's your playground!"
+            },
+            'cozy_connector': {
+                type: 'Cozy Connector',
+                icon: '☕',
+                description: "You create warm, welcoming spaces where people feel heard. Your superpower is making everyone feel like they belong. Perfect for Toronto's cafe culture!"
+            },
+            'culture_curator': {
+                type: 'Culture Curator',
+                icon: '🎨',
+                description: "You're always in the know about the coolest events and hidden gems in Toronto. Friends rely on you for the best recommendations and experiences!"
+            },
+            'social_catalyst': {
+                type: 'Social Catalyst',
+                icon: '✨',
+                description: "You light up every room you enter! Your enthusiasm and humor make every hangout memorable. You're the spark that turns strangers into friends."
+            },
+            'community_builder': {
+                type: 'Community Builder',
+                icon: '🏠',
+                description: "You have a gift for creating belonging. People feel safe and valued around you. You're building the Toronto community we all need!"
+            }
+        };
+
+        // Global Variables
+        let currentQuestion = 0;
+        let answers = {};
+        let userName = '';
+        let quizStartTime = null;
+        let aiMessages = [];
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            // Hide loading screen after a moment
+            setTimeout(() => {
+                document.getElementById('loadingScreen').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('loadingScreen').style.display = 'none';
+                }, 500);
+            }, 1500);
+
+            // Initialize activity ticker
+            startActivityTicker();
+            
+            // Load Google Analytics
+            if (quizConfig.analytics.googleAnalyticsId) {
+                loadGoogleAnalytics();
+            }
+
+            // Initialize AI responses
+            initializeAI();
+        });
+
+        // Start Quiz
+        function startQuiz() {
+            quizStartTime = Date.now();
+            document.getElementById('heroSection').style.display = 'none';
+            document.getElementById('socialProof').style.display = 'none';
+            document.getElementById('quizContainer').style.display = 'block';
+            
+            // Render first question
+            renderQuestion(0);
+            
+            // Track event
+            trackEvent('quiz_started');
+            
+            // Show welcome AI message
+            addAIMessage("Great decision! I'll guide you through this. Remember, there are no wrong answers - just be yourself! 💙");
+        }
+
+        // Render Question
+        function renderQuestion(index) {
+            const question = quizQuestions[index];
+            const container = document.getElementById('questionsContainer');
+            
+            // Get dynamic question text
+            const questionText = getDynamicQuestionText(question, index);
+            
+            // Get AI hint
+            const aiHint = getAIHint(question, index);
+            
+            let html = `
+                <div class="question active" data-question="${question.id}">
+                    <div class="question-number">Question ${index + 1} of ${quizQuestions.length}</div>
+                    <h2 class="question-text">${questionText}</h2>
+                    ${aiHint ? `<div class="ai-hint"><span class="ai-hint-icon">💡</span><span>${aiHint}</span></div>` : ''}
+            `;
+
+            if (question.type === 'text') {
+                html += `
+                    <input type="${question.validation === 'email' ? 'email' : 'text'}" 
+                           class="input-field" 
+                           id="input-${question.id}"
+                           placeholder="${question.placeholder}"
+                           value="${answers[question.id] || ''}"
+                           onkeyup="handleTextInput(event, ${question.id})">
+                `;
+            } else if (question.type === 'options') {
+                html += '<div class="options-grid">';
+                question.options.forEach(option => {
+                    const isSelected = answers[question.id] === option.value;
+                    html += `
+                        <div class="option ${isSelected ? 'selected' : ''}" 
+                             onclick="selectOption(${question.id}, '${option.value}', this)">
+                            <span class="option-emoji">${option.emoji}</span>
+                            <span>${option.label}</span>
+                        </div>
+                    `;
+                });
+                html += '</div>';
+            }
+
+            html += `
+                <div class="nav-buttons">
+                    ${index > 0 ? `<button class="nav-btn back-btn" onclick="previousQuestion()">Back</button>` : ''}
+                    <button class="nav-btn next-btn" 
+                            id="nextBtn"
+                            onclick="nextQuestion()" 
+                            ${!answers[question.id] ? 'disabled' : ''}>
+                        ${index === quizQuestions.length - 1 ? 'See My Results! 🎉' : 'Next'}
+                    </button>
+                </div>
+                </div>
+            `;
+
+            container.innerHTML = html;
+            updateProgress();
+            
+            // Focus on input if text question
+            if (question.type === 'text') {
+                setTimeout(() => {
+                    document.getElementById(`input-${question.id}`).focus();
+                }, 100);
+            }
+        }
+
+        // Get Dynamic Question Text
+        function getDynamicQuestionText(question, index) {
+            // Time-based variations
+            const hour = new Date().getHours();
+            
+            if (question.variations) {
+                if (Array.isArray(question.variations)) {
+                    // Random variation
+                    return question.variations[Math.floor(Math.random() * question.variations.length)];
+                } else if (typeof question.variations === 'object') {
+                    // Time-based variation
+                    if (hour < 12 && question.variations.morning) {
+                        return question.variations.morning;
+                    } else if (hour < 18 && question.variations.afternoon) {
+                        return question.variations.afternoon;
+                    } else if (question.variations.evening) {
+                        return question.variations.evening;
+                    }
+                    
+                    // Energy-based variation
+                    if (answers[4] === 'active' && question.variations.energetic) {
+                        return question.variations.energetic;
+                    } else if (answers[4] === 'coffee' && question.variations.relaxed) {
+                        return question.variations.relaxed;
+                    }
+                }
+            }
+            
+            return question.baseQuestion;
+        }
+
+        // Get AI Hint
+        function getAIHint(question, index) {
+            if (question.aiHints && question.aiHints.length > 0) {
+                // Contextual hints based on progress
+                if (index < 3) {
+                    return question.aiHints[0];
+                } else if (index < 7) {
+                    return question.aiHints[Math.floor(Math.random() * question.aiHints.length)];
+                } else {
+                    return "Almost done! Your perfect circles are taking shape 🎯";
+                }
+            }
+            return null;
+        }
+
+        // Handle Text Input
+        function handleTextInput(event, questionId) {
+            const value = event.target.value.trim();
+            answers[questionId] = value;
+            
+            if (questionId === 1) {
+                userName = value;
+            }
+            
+            const nextBtn = document.getElementById('nextBtn');
+            nextBtn.disabled = value === '';
+            
+            // Enter to continue
+            if (event.key === 'Enter' && value !== '') {
+                nextQuestion();
+            }
+        }
+
+        // Select Option
+        function selectOption(questionId, value, element) {
+            answers[questionId] = value;
+            
+            // Update UI
+            element.parentElement.querySelectorAll('.option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            element.classList.add('selected');
+            
+            // Enable next button
+            document.getElementById('nextBtn').disabled = false;
+            
+            // Auto-advance after short delay
+            setTimeout(() => {
+                nextQuestion();
+            }, 300);
+            
+            // Show contextual AI message
+            showContextualAIMessage(questionId, value);
+        }
+
+        // Navigation
+        function nextQuestion() {
+            if (currentQuestion < quizQuestions.length - 1) {
+                currentQuestion++;
+                renderQuestion(currentQuestion);
+                
+                // Track progress
+                trackEvent('question_answered', {
+                    question: currentQuestion,
+                    answer: answers[currentQuestion]
+                });
+            } else {
+                showResults();
+            }
+        }
+
+        function previousQuestion() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                renderQuestion(currentQuestion);
+            }
+        }
+
+        // Update Progress Bar
+        function updateProgress() {
+            const progress = ((currentQuestion + 1) / quizQuestions.length) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+        }
+
+        // Calculate Personality
+        function calculatePersonality() {
+            const lifestyle = answers[4];
+            const social = answers[7];
+            const superpower = answers[10];
+            
+            // Scoring logic
+            if (lifestyle === 'active' && superpower === 'organizer') {
+                return 'adventure_catalyst';
+            } else if (lifestyle === 'coffee' && social === 'deep') {
+                return 'cozy_connector';
+            } else if (lifestyle === 'culture') {
+                return 'culture_curator';
+            } else if (superpower === 'energizer') {
+                return 'social_catalyst';
+            } else if (superpower === 'connector' || superpower === 'helper') {
+                return 'community_builder';
+            }
+            
+            // Default
+            return 'social_catalyst';
+        }
+
+        // Show Results
+        function showResults() {
+            const personalityKey = calculatePersonality();
+            const personality = personalityTypes[personalityKey];
+            
+            // Hide questions container
+            document.getElementById('questionsContainer').style.display = 'none';
+            
+            // Show results
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.classList.add('active');
+            
+            // Populate results
+            document.getElementById('personalityIcon').textContent = personality.icon;
+            document.getElementById('personalityType').textContent = personality.type;
+            document.getElementById('personalityDescription').textContent = personality.description;
+            
+            // Generate sample matches
+            generateMatches();
+            
+            // Submit to Google Forms
+            submitToGoogleForms();
+            
+            // Track completion
+            const quizTime = Math.round((Date.now() - quizStartTime) / 1000);
+            trackEvent('quiz_completed', {
+                personality: personalityKey,
+                time_seconds: quizTime
+            });
+            
+            // Celebration effect
+            celebrateCompletion();
+        }
+
+        // Generate Sample Matches
+        function generateMatches() {
+            const neighborhood = answers[3];
+            const activity = answers[4];
+            
+            const sampleMatches = [
+                {
+                    name: `${getNeighborhoodName(neighborhood)} ${getActivityGroup(activity)}`,
+                    members: Math.floor(Math.random() * 8) + 4,
+                    nextMeetup: 'This Saturday, 2pm'
+                },
+                {
+                    name: `${userName}'s ${getActivityName(activity)} Crew`,
+                    members: Math.floor(Math.random() * 6) + 3,
+                    nextMeetup: 'Thursday, 7pm'
+                },
+                {
+                    name: `The ${getNeighborhoodName(neighborhood)} Social Circle`,
+                    members: Math.floor(Math.random() * 10) + 5,
+                    nextMeetup: 'Sunday, 11am'
+                }
+            ];
+            
+            const container = document.getElementById('matchesContainer');
+            container.innerHTML = sampleMatches.map(match => `
+                <div class="match-card">
+                    <div class="match-name">${match.name}</div>
+                    <div class="match-details">
+                        👥 ${match.members} members | 📅 Next: ${match.nextMeetup}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Helper functions for match generation
+        function getNeighborhoodName(value) {
+            const names = {
+                downtown: 'Downtown',
+                west: 'West End',
+                east: 'East End',
+                north: 'North York',
+                midtown: 'Midtown',
+                etobicoke: 'Etobicoke',
+                scarborough: 'Scarborough'
+            };
+            return names[value] || 'Toronto';
+        }
+
+        function getActivityGroup(value) {
+            const groups = {
+                active: 'Adventurers',
+                coffee: 'Coffee Lovers',
+                culture: 'Culture Club',
+                food: 'Foodies',
+                games: 'Game Night',
+                nature: 'Nature Walkers'
+            };
+            return groups[value] || 'Social Club';
+        }
+
+        function getActivityName(value) {
+            const names = {
+                active: 'Adventure',
+                coffee: 'Coffee & Chat',
+                culture: 'Arts',
+                food: 'Foodie',
+                games: 'Board Game',
+                nature: 'Nature'
+            };
+            return names[value] || 'Social';
+        }
+
+        // Submit to Google Forms
+        function submitToGoogleForms() {
+            if (!quizConfig.googleForm.url) {
+                console.log('Google Form URL not configured');
+                return;
+            }
+            
+            const formData = new FormData();
+            
+            // Map answers to Google Form entries
+            // You'll need to update these entry IDs
+            Object.keys(answers).forEach(key => {
+                if (quizConfig.googleForm.entries[key]) {
+                    formData.append(quizConfig.googleForm.entries[key], answers[key]);
+                }
+            });
+            
+            // Silent submission
+            fetch(quizConfig.googleForm.url, {
+                method: 'POST',
+                mode: 'no-cors',
+                body: formData
+            }).catch(err => console.log('Form submission handled'));
+        }
+
+        // View Full Matches
+        function viewFullMatches() {
+            alert(`Thanks ${userName}! Check your email at ${answers[2]} - we've sent your complete matches with joining instructions!`);
+            
+            // In production, this would redirect to a dashboard or trigger email
+            trackEvent('view_matches_clicked');
+        }
+
+        // AI Assistant Functions
+        function toggleAI() {
+            const chat = document.getElementById('aiChat');
+            chat.classList.toggle('active');
+            
+            if (chat.classList.contains('active')) {
+                trackEvent('ai_assistant_opened');
+            }
+        }
+
+        function addAIMessage(message, isUser = false) {
+            const chatBody = document.getElementById('aiChatBody');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `ai-message ${isUser ? 'user' : ''}`;
+            messageDiv.textContent = message;
+            chatBody.appendChild(messageDiv);
+            chatBody.scrollTop = chatBody.scrollHeight;
+        }
+
+        function showContextualAIMessage(questionId, answer) {
+            const contextualMessages = {
+                3: {
+                    'downtown': "Downtown! The heart of the action. Great choice for meeting variety! 🏙️",
+                    'west': "West end best end! Love the creative vibes there 🎨",
+                    'east': "The Beaches are beautiful! Great community feel there 🏖️"
+                },
+                4: {
+                    'active': "An active soul! Toronto has amazing outdoor groups for you 💪",
+                    'coffee': "Coffee culture is huge here! So many great cafes to explore ☕",
+                    'games': "Board game cafes are having a moment in Toronto! 🎲"
+                }
+            };
+            
+            if (contextualMessages[questionId] && contextualMessages[questionId][answer]) {
+                addAIMessage(contextualMessages[questionId][answer]);
+            }
+        }
+
+        function initializeAI() {
+            // Pre-written AI responses for common queries
+            window.aiResponses = {
+                greeting: [
+                    "Hi! I'm here to help you find your perfect Toronto community! 🎉",
+                    "Welcome! Ready to discover your tribe in the 6ix? 🏙️"
+                ],
+                nervous: [
+                    "Feeling nervous is totally normal! Remember, everyone else was nervous too 🤗",
+                    "The hardest part is starting - you're already doing great! 💪"
+                ],
+                questions: {
+                    "how long": "The quiz takes about 2 minutes - just 10 quick questions!",
+                    "is it free": "Yes! The quiz and matching are completely free. No hidden fees!",
+                    "safe": "All meetups start in public places with groups of 4-10 people. Safety first!",
+                    "what happens": "After the quiz, we match you with 3 circles based on your answers. You choose which to join!"
+                }
+            };
+        }
+
+        // Activity Ticker
+        function startActivityTicker() {
+            const activities = [
+                "Sarah from Queen West just joined!",
+                "New coffee meetup starting in Parkdale",
+                "Board game night in The Junction is filling up",
+                "15 people joined in the last hour",
+                "Weekend hiking group just launched",
+                "Leslieville book club has 2 spots left"
+            ];
+            
+            let index = 0;
+            
+            setInterval(() => {
+                const ticker = document.getElementById('activityTicker');
+                const text = document.getElementById('activityText');
+                
+                ticker.style.display = 'flex';
+                text.textContent = activities[index % activities.length];
+                
+                setTimeout(() => {
+                    ticker.style.animation = 'slideInLeft 0.5s ease-out';
+                }, 100);
+                
+                setTimeout(() => {
+                    ticker.style.display = 'none';
+                }, 5000);
+                
+                index++;
+            }, 20000); // Every 20 seconds
+        }
+
+        // Celebration Effect
+        function celebrateCompletion() {
+            // Create confetti
+            const colors = ['#2E5BFF', '#FF6B35', '#4A90E2', '#2ECC71'];
+            const confettiCount = 50;
+            
+            for (let i = 0; i < confettiCount; i++) {
+                const confetti = document.createElement('div');
+                confetti.style.cssText = `
+                    position: fixed;
+                    width: 10px;
+                    height: 10px;
+                    background: ${colors[Math.floor(Math.random() * colors.length)]};
+                    top: -10px;
+                    left: ${Math.random() * 100}%;
+                    opacity: ${Math.random() + 0.5};
+                    transform: rotate(${Math.random() * 360}deg);
+                    transition: all ${Math.random() * 3 + 2}s ease-out;
+                    pointer-events: none;
+                    z-index: 9999;
+                `;
+                
+                document.body.appendChild(confetti);
+                
+                setTimeout(() => {
+                    confetti.style.top = '110%';
+                    confetti.style.transform = `rotate(${Math.random() * 360}deg) translateX(${(Math.random() - 0.5) * 200}px)`;
+                    confetti.style.opacity = '0';
+                }, 100);
+                
+                setTimeout(() => {
+                    confetti.remove();
+                }, 5000);
+            }
+        }
+
+        // Analytics Functions
+        function loadGoogleAnalytics() {
+            if (!quizConfig.analytics.googleAnalyticsId) return;
+            
+            // Google Analytics 4
+            const script = document.createElement('script');
+            script.async = true;
+            script.src = `https://www.googletagmanager.com/gtag/js?id=${quizConfig.analytics.googleAnalyticsId}`;
+            document.head.appendChild(script);
+            
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', quizConfig.analytics.googleAnalyticsId);
+        }
+
+        function trackEvent(eventName, parameters = {}) {
+            if (!quizConfig.analytics.trackEvents) return;
+            
+            // Google Analytics
+            if (typeof gtag !== 'undefined') {
+                gtag('event', eventName, parameters);
+            }
+            
+            // Console log for debugging
+            console.log('Event tracked:', eventName, parameters);
+        }
+
+        // Privacy/Terms Modals
+        function showPrivacy() {
+            alert('Privacy Policy\n\nWe collect minimal data to match you with circles. Your information is never sold and is protected under Canadian privacy laws. Full policy at realworldcircle.com/privacy');
+        }
+
+        function showTerms() {
+            alert('Terms of Service\n\nBy using RealWorldCircle, you agree to meet in public places and treat all members with respect. Full terms at realworldcircle.com/terms');
+        }
+
+        // Service Worker for offline functionality (optional)
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js').catch(() => {
+                // Service worker registration failed, app still works
+            });
+        }
+    </script>
+
+    <!-- JSON-LD Schema for SEO -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "RealWorldCircle",
+        "description": "AI-powered quiz to find your perfect circle of friends in Toronto",
+        "url": "https://www.realworldcircle.com",
+        "applicationCategory": "SocialNetworkingApplication",
+        "operatingSystem": "Any",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "CAD"
+        },
+        "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "4.8",
+            "reviewCount": "2147"
+        }
+    }
+    </script>
+</body>
+</html>
